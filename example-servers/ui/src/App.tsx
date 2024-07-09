@@ -18,26 +18,23 @@ const App: React.FC = () => {
         response: 'What would you like to know about our product?',
     });
 
-    const [messages, setMessages] = useState<
-        { text?: string; role: string; html?: string }[]
-    >([
+    const [messages, setMessages] = useState<{ text?: string; role: string; html?: string }[]>([
         { text: 'Welcome to next big thing', role: 'ai' },
         { text: 'I am Launchbot and...', role: 'ai' },
         { text: 'I am going to give you an idea on how you could showcase your product', role: 'ai' },
         {
             html: `
         <div class="deep-chat-temporary-message">
-          <button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid green">Proceed</button>
-          <button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid #d80000">Not interested</button>
+          <button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid green" onclick="handleButtonClick('Proceed')">Proceed</button>
+          <button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid #d80000" onclick="handleButtonClick('Not interested')">Not interested</button>
         </div>`,
             role: 'user',
         },
     ]);
-    const handleButtonClick = (event: any) => {
-        const button = event.target.value;
-        // if (button.classList.contains('deep-chat-suggestion-button')) {
-            const userChoice = button;
 
+    useEffect(() => {
+        // Define the button click handler
+        (window as any).handleButtonClick = (userChoice: string) => {
             let response = '';
             let suggestions: string[] = [];
 
@@ -64,33 +61,24 @@ const App: React.FC = () => {
                 { text: userChoice, role: 'user' },
                 {
                     html: `
-              <div>
-                <p>${response}</p>
-                <div class="deep-chat-temporary-message">
-                  ${suggestions
+            <div>
+              <p>${response}</p>
+              <div class="deep-chat-temporary-message">
+                ${suggestions
                         .map(
                             (suggestion) => `
-                    <button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid green">${suggestion}</button>
-                  `,
+                      <button class="deep-chat-button deep-chat-suggestion-button" style="border: 1px solid green" onclick="handleButtonClick('${suggestion}')">${suggestion}</button>
+                    `,
                         )
                         .join('')}
-                </div>
               </div>
-            `,
+            </div>
+          `,
                     role: 'ai',
                 },
             ]);
-        }
-   // };
-    useEffect(() => {
-
-
-        document.body.addEventListener('click', handleButtonClick);
-
-        return () => {
-            document.body.removeEventListener('click', handleButtonClick);
         };
-    }, [conversationState]);
+    }, []);
 
     return (
         <div className="App">
