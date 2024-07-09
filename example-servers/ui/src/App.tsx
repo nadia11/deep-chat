@@ -82,8 +82,8 @@ const App: React.FC = () => {
 
     return (
         <div className="App">
-            <h1>Deep Chat</h1>
-            <DeepChat initialMessages={messages} demo={true} />
+            <h1>Deep Chat Nadia.ai</h1>
+            <DeepChat initialMessages={messages} demo={true} inputAreaStyle={{"display": "none"}}/>
         </div>
     );
 };
