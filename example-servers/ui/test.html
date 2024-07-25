@@ -1,0 +1,134 @@
+<!-- This example demonstrates how to set values via attributes and properties (recommended) -->
+<!-- !!Please note that upon loading/saving this sandbox - the property values applied will not be applied without a RESTART!! -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+
+</head>
+<style>
+  body{
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /*background-color: rgba(211,211,211,0.5);*/
+      background-color: rgba(0,0,0,0.8);
+  }
+#chat-element{
+    font-size: larger;
+}
+</style>
+<script
+  type="module"
+  src="https://unpkg.com/deep-chat@2.0.0/dist/deepChat.bundle.js"
+></script>
+<body>
+
+<deep-chat
+  id="chat-element"
+  demo='{"displayLoadingBubble": true}'
+  textInput='{"placeholder":{"text": "Welcome to the demo!"}}'
+  inputAreaStyle='{"display": "none"}'
+  chatStyle='{"backgroundColor": "#f7f7f7", "borderRadius": "20px","height": "80vh","width":"40vw"}'
+  messageStyles='{
+
+     "loading": {
+      "bubble": {"backgroundColor": "#3793ff", "fontSize": "20px", "color": "white"}
+    },
+    "default": {
+      "shared": {"bubble": {"color": "white"}},
+      "ai": {"bubble": {"backgroundColor": "rgb(14 165 233)"}},
+      "user": {"bubble": {"backgroundColor": "#6767ff","font-size":"17px"}},
+      "bob": {"bubble": {"backgroundColor": "#ffa500"}}
+    }
+  }'
+></deep-chat>
+</body>
+<!-- !!Either set the script as "module" or place your code in a timeout in order to wait for the component to load -->
+<script type="module">
+  const elementRef = document.getElementById("chat-element");
+  const generateHTML = (data) => {
+    console.log('Generating HTML for data:', data);
+
+    if ( data.buttons_data) {
+      const messageHtml = data.buttons_data.messages.length > 0
+        ? data.buttons_data.messages.map((message) => `<p>${message.message}</p>`)
+        : '<p>No messages available</p>';
+
+      const buttonsHtml = data.buttons_data.buttons && data.buttons_data.buttons.length > 0
+        ? data.buttons_data.buttons.map((button) => `<button class="deep-chat-button"">${button.button}</button>`)
+        : '<p>No buttons available</p>';
+
+      return `
+                <div >
+                    ${messageHtml}
+                    ${buttonsHtml}
+                </div>
+            `;
+    } else if ( data.card_data) {
+      return `
+                <div style="padding: 2vh">
+                    ${data.card_data.cards?.map((card) => `
+                        <div>
+                            <h3>${card.title}</h3>
+                            <p>${card.description}</p>
+                            <img src="${card.image}" alt="${card.title}" style="height: 20vh; border-radius: 10px; margin-bottom: 1vh"/>
+                            <div>
+                            ${card.buttons.map((button) => `
+                                <button class="deep-chat-button">${button.name}</button>
+                            `)}
+                            </div>
+                        </div>
+                    `)}
+                </div>
+            `;
+    } else if ( data.message_data) {
+      return `
+                <div>
+                    ${data.message_data.messages[0] ? `<img src="${data.message_data.messages[0].message}" alt="Image" />` : '<p>No image available</p>'}
+                </div>
+            `;
+    }
+    return '<p>No data available</p>';
+  };
+  async function fetchNodes() {
+    const chat_id = 'd290f1ee-6c54-4b01-90e6-d701748f0851'; // Replace with your actual chat_id
+    const response = await fetch(`http://localhost:5000/nodes/${chat_id}`);
+    const fetchedNodes = await response.json();
+    let responseMessage;
+    fetchedNodes.map(node=>{
+      if (node.data.buttons_data || node.data.card_data || node.data.type === 'image') {
+        responseMessage = {html: generateHTML(node.data),role:"ai"};
+      } else if (node.data.message_data) {
+        responseMessage = {text: node.data.message_data.messages[0]?.message || '', role:"ai"}
+      }
+      elementRef.history = [...elementRef.history, responseMessage];
+      console.log("historty"+ JSON.stringify(elementRef.history))
+    })
+
+    return responseMessage;
+  }
+  function attachButtonListeners() {
+    document.querySelectorAll('.deep-chat-button').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const buttonText = event.target.innerText;
+        elementRef.history = [...elementRef.history, { role: "user", text: buttonText }];
+        displayNextNode();
+      });
+    });
+  }
+  fetchNodes();
+  // Setting value via a property (easiest way)
+  elementRef.history = [
+    { role: "ai", text: "Do you want to know more about our product?" },
+    { role: "user", html: `<div>Proceed</div>` },
+  ];
+  elementRef.setAttribute(
+    "introMessage",
+    JSON.stringify({
+      text: "Hi! I am your AI assistance..",
+    })
+  );
+</script>
+</html>

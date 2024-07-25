@@ -1,7 +1,7 @@
 import { DeepChat } from 'deep-chat-react';
 import './App.css';
 import './style.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface Node {
   chat_id: string;
@@ -67,10 +67,17 @@ interface ChatMessage {
   html?: string;
 }
 
-function App() {
-  const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
+const App: React.FC = () => {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [currentNodeIndex, setCurrentNodeIndex] = useState(0);
+  const chatRef = useRef<any>(null); // Create a ref for DeepChat component
+
+  const sampleInitialMessage: ChatMessage[] = [
+    {
+      text: 'Welcome to Deep Chat!',
+      role: 'ai'
+    }
+  ];
 
   useEffect(() => {
     const fetchInitialMessages = async () => {
@@ -91,58 +98,47 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (nodes.length > 0) {
-      displayNodeMessage(0);
+    if (chatRef.current) {
+      chatRef.current.demo = {
+        response: (message: any) => {
+          const nextIndex = currentNodeIndex + 1;
+          if (nextIndex <= nodes.length) {
+            const node = nodes[nextIndex];
+            let responseMessage = '';
+
+            if (node.data.buttons_data || node.data.card_data || node.data.type === 'image') {
+              responseMessage = generateHTML(node.data);
+            } else if (node.data.message_data) {
+              responseMessage = node.data.message_data.messages[0]?.message || '';
+            }
+
+            setCurrentNodeIndex(nextIndex);
+
+            return { text: "responseMessage" };
+          } else {
+            return { text: 'No more messages.' };
+          }
+        },
+
+      };
     }
-  }, [nodes]);
-
-  const displayNodeMessage = (index: number) => {
-    if (index < nodes.length) {
-      const node = nodes[index];
-      const messages: ChatMessage[] = [];
-
-      if (node.data.type === 'buttons' || node.data.type === 'card' || node.data.type === 'image') {
-        messages.push({
-          html: generateHTML(node.data),
-          role: 'ai'
-        });
-      } else if (node.data.message_data) {
-        messages.push({
-          text: node.data.message_data.messages[0]?.message || '',
-          role: 'ai'
-        });
-      }
-
-      if (!node.data.buttons_data) {
-        messages.push({
-          html: `<button class="deep-chat-button deep-chat-next-button" style="border: 1px solid blue">Next</button>`,
-          role: 'ai'
-        });
-      }
-
-    //  setInitialMessages(prevMessages => [...prevMessages, ...messages]);
-      setCurrentNodeIndex(index);
+  }, [currentNodeIndex, nodes]);
+  useEffect(() => {
+    // (window as any).changeNode = () =>{
+    //  setCurrentNodeIndex(1);
+    // }
+    if (chatRef.current) {
+      chatRef.current.history = [
+        {html: '<button class="custom-button">Hoverable</button>', role: 'user'},
+        {html: '<button class="custom-button ai-button">Hoverable</button>', role: 'ai'},
+      ];
     }
-  };
-
-  const handleButtonClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    const button = event.target as HTMLButtonElement;
-    if (button.classList.contains('deep-chat-next-button')) {
-      displayNodeMessage(currentNodeIndex + 1);
-    } else if (button.classList.contains('deep-chat-suggestion-button')) {
-      const buttonText = button.textContent || '';
-      // setInitialMessages(prevMessages => [
-      //   ...prevMessages,
-      //   { text: buttonText, role: 'user' }
-      // ]);
-      displayNodeMessage(currentNodeIndex + 1);
-    }
-  };
+  }, []);
 
   const generateHTML = (data: NodeDataType) => {
     console.log('Generating HTML for data:', data); // Debugging
 
-    if (data.type === 'buttons' && data.buttons_data) {
+    if ( data.buttons_data) {
       const messageHtml = data.buttons_data.messages.length > 0
         ? data.buttons_data.messages.map((message: ButtonNodeData) => `<p>${message.message}</p>`).join('')
         : '<p>No messages available</p>';
@@ -157,7 +153,7 @@ function App() {
                     ${buttonsHtml}
                 </div>
             `;
-    } else if (data.type === 'card' && data.card_data) {
+    } else if ( data.card_data) {
       return `
                 <div class="deep-chat-temporary-message">
                     ${data.card_data.cards?.map((card) => `
@@ -172,10 +168,10 @@ function App() {
                     `).join('') || ''}
                 </div>
             `;
-    } else if (data.type === 'image' && data.message_data) {
+    } else if ( data.message_data) {
       return `
                 <div class="deep-chat-temporary-message">
-                    ${data.message_data.messages[0] ? `<img src="${data.message_data.messages[0].message}" alt="Image" />` : '<p>No image available</p>'}
+                    ${data.message_data.messages[0] ? `<img src="${data.message_data.messages[0].message}" alt="Image"  style="height: 20%;width:20%"/>` : '<p>No image available</p>'}
                 </div>
             `;
     }
@@ -183,11 +179,17 @@ function App() {
   };
 
   return (
-    <div className="App" onClick={handleButtonClick}>
+    <div className="App">
       <h1>Deep Chat</h1>
-      <DeepChat initialMessages={initialMessages} demo={true} inputAreaStyle={{ display: 'none' }} />
+      <DeepChat
+        id="chat-element"
+        ref={chatRef}
+        initialMessages={sampleInitialMessage}
+        style={{ borderRadius: '8px' }}
+        inputAreaStyle={{ display: 'none' }}
+      />
     </div>
   );
-}
+};
 
 export default App;
