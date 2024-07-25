@@ -12,11 +12,12 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use(bodyParser.text({ limit: '200mb' }));
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'chatbot',
-  password: 'SiriAlexi1',
+  user: 'nadia',
+  host: 'nadia.dpg-cqhd0etds78s73bdaqng-a.singapore-postgres.render.com',
+  database: 'chatbot_03gp',
+  password: 'TKbJJgAHRtMRwaXD5zDY0xJ6yRkVHVoi',
   port: 5432,
+  ssl:{rejectUnauthorized:false}
 });
 
 interface NodeData {
