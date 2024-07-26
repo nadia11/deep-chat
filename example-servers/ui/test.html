@@ -12,42 +12,53 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      /*background-color: rgba(211,211,211,0.5);*/
-      background-color: rgba(0,0,0,0.8);
+      background-image: url("https://media.istockphoto.com/id/1203074452/vector/space-background-with-shining-stars-nebula-and-stardust-colorful-cosmos-with-realistic.jpg?s=612x612&w=0&k=20&c=9FzjBi3qIpSomQ-pn2sLRhOQpOON1-h9YWLTzH9ThEo=");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
   }
 #chat-element{
     font-size: larger;
 }
+
 </style>
 <script
   type="module"
   src="https://unpkg.com/deep-chat@2.0.0/dist/deepChat.bundle.js"
 ></script>
 <body>
-
+<div id="chat-container">
 <deep-chat
   id="chat-element"
   demo='{"displayLoadingBubble": true}'
   textInput='{"placeholder":{"text": "Welcome to the demo!"}}'
   inputAreaStyle='{"display": "none"}'
-  chatStyle='{"backgroundColor": "#f7f7f7", "borderRadius": "20px","height": "80vh","width":"40vw"}'
+  chatStyle='{"background": "rgba(204, 232, 255, 0.6)", "borderRadius": "20px","height": "80vh","width":"40vw"}'
   messageStyles='{
 
      "loading": {
       "bubble": {"backgroundColor": "#3793ff", "fontSize": "20px", "color": "white"}
     },
     "default": {
-      "shared": {"bubble": {"color": "white"}},
-      "ai": {"bubble": {"backgroundColor": "rgb(14 165 233)"}},
-      "user": {"bubble": {"backgroundColor": "#6767ff","font-size":"17px"}},
-      "bob": {"bubble": {"backgroundColor": "#ffa500"}}
+      "shared": {"bubble": {"color": "black"}},
+      "ai": {"bubble": {"backgroundColor": "white"}},
+      "user": {"bubble": {"backgroundColor": "white","font-size":"17px"}},
+      "bob": {"bubble": {"backgroundColor": "white"}}
     }
   }'
 ></deep-chat>
+</div>
 </body>
 <!-- !!Either set the script as "module" or place your code in a timeout in order to wait for the component to load -->
 <script type="module">
   const elementRef = document.getElementById("chat-element");
+  const chatContainer = document.getElementById("chat-container");
+
+  document.addEventListener("click", (event) => {
+    // Check if the click was outside the chat element
+    if (!chatContainer.contains(event.target)) {
+      elementRef.style.display = "none";
+    }
+  });
   const generateHTML = (data) => {
     console.log('Generating HTML for data:', data);
 
@@ -94,7 +105,7 @@
   };
   async function fetchNodes() {
     const chat_id = 'd290f1ee-6c54-4b01-90e6-d701748f0851'; // Replace with your actual chat_id
-    const response = await fetch(`http://localhost:5000/nodes/${chat_id}`);
+    const response = await fetch(`https://deep-chat-1.onrender.com/nodes/${chat_id}`);
     const fetchedNodes = await response.json();
     let responseMessage;
     fetchedNodes.map(node=>{

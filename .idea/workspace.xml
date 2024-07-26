@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1f461ad8-17e1-47c4-a082-8bd1941cbfe2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example-servers/node/express/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/example-servers/node/express/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example-servers/ui/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/example-servers/ui/test.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +37,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
-    "JavaScript Debug.test.html.executor": "Debug",
+    "JavaScript Debug.test.html.executor": "Run",
     "JavaScript Debug.test2.html.executor": "Run",
     "Node.js.test.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -53,7 +53,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JavaScript Debug.test2.html">
+  <component name="RunManager" selected="JavaScript Debug.test.html">
     <configuration name="test2.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/deep-chat/example-servers/ui/test2.html" useBuiltInWebServerPort="true">
       <method v="2" />
     </configuration>
@@ -65,8 +65,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript Debug.test2.html" />
         <item itemvalue="JavaScript Debug.test.html" />
+        <item itemvalue="JavaScript Debug.test2.html" />
         <item itemvalue="Node.js.test.js" />
       </list>
     </recent_temporary>
