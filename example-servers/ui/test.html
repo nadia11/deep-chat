@@ -29,6 +29,12 @@
 <div id="chat-container">
 <deep-chat
   id="chat-element"
+  avatars='{
+    "default": {"styles": {"avatar": {"height": "40px", "width": "40px"}, "container": {"marginTop": "8px"}}},
+    "user": {"src": "./assets/user.svg", "styles": {"avatar": {"marginLeft": "-3px"}}},
+    "ai": {"src": "./assets/bot.svg", "styles": {"avatar": {"marginLeft": "-3px"}}},
+    "bob": {"src": "path-to-file.png", "styles": {"avatar": {"borderRadius": "15px"}}}
+  }'
   demo='{"displayLoadingBubble": true}'
   textInput='{"placeholder":{"text": "Welcome to the demo!"}}'
   inputAreaStyle='{"display": "none"}'
@@ -39,9 +45,17 @@
       "bubble": {"backgroundColor": "#3793ff", "fontSize": "20px", "color": "white"}
     },
     "default": {
-      "shared": {"bubble": {"color": "black"}},
-      "ai": {"bubble": {"backgroundColor": "white"}},
-      "user": {"bubble": {"backgroundColor": "white","font-size":"17px"}},
+      "shared": {"bubble": {"color": "#202A5E"}},
+      "ai": {"bubble": {"backgroundColor": "white", "padding-inline":"3vh", "padding-block":"1vh",
+      "border-top-left-radius": "0px",
+      "border-bottom-left-radius": "25px",
+      "border-top-right-radius": "25px",
+      "border-bottom-right-radius": "25px"}},
+      "user": {"bubble": {"backgroundColor": "white",  "padding-inline":"3vh", "padding-block":"1vh",
+      "border-top-left-radius": "25px",
+      "border-bottom-left-radius": "25px",
+      "border-top-right-radius": "0px",
+      "border-bottom-right-radius": "25px"}},
       "bob": {"bubble": {"backgroundColor": "white"}}
     }
   }'
