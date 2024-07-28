@@ -37,7 +37,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
-    "JavaScript Debug.test.html.executor": "Debug",
+    "JavaScript Debug.test.html.executor": "Run",
     "JavaScript Debug.test2.html.executor": "Run",
     "Node.js.test.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",

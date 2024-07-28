@@ -16,6 +16,13 @@
     #chat-element {
         font-size: larger;
     }
+    .deep-chat-next-button{
+        background-color: #707EE1 !important;
+    }
+    .deep-chat-button{
+        background-color: #707EE1 !important;
+        color: white !important;
+    }
 </style>
 <script
   type="module"
@@ -32,26 +39,42 @@
     "bob": {"src": "path-to-file.png", "styles": {"avatar": {"borderRadius": "15px"}}}
   }'
     demo='{"displayLoadingBubble": true}'
-    textInput='{"placeholder":{"text": "Welcome to the demo!"}}'
-    inputAreaStyle='{"display": "none"}'
-    chatStyle='{"background": "rgba(204, 232, 255, 0.6)", "borderRadius": "20px","height": "80vh","width":"40vw"}'
+    textInput='{
+    "disabled": true,
+    "styles": {
+      "container": {"height": "5vh", "width":"100%", "display":"flex","alignItems":"center", "justifyContent":"center", "borderRadius":"15px"},
+      "focus": {"border": "2px solid #a2a2ff"}
+    },
+    "placeholder": {
+      "text": "Under Construction"
+  }}'
+    submitButtonStyles='{h
+    "disabled": {
+      "container": {"default": {"display":"flex","alignItems":"center", "justifyContent":"center"}},
+      "svg": {
+        "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <svg viewBox=\"0 0 25 25\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" d=\"M5.781 4.414a7 7 0 019.62 10.039l-9.62-10.04zm-1.408 1.42a7 7 0 009.549 9.964L4.373 5.836zM10 1a9 9 0 100 18 9 9 0 000-18z\"/> </svg>",
+        "styles": {"default": {"marginBottom": "1.2vh", "paddingLeft": "2px"}}
+      }
+    }
+  }'
+    chatStyle='{"background": "rgba(204, 232, 255, 0.6)", "borderRadius": "20px","height": "80vh","width":"40vw","paddingBlock":"30px","paddingInline":"60px"}'
     messageStyles='{
 
      "loading": {
-      "bubble": {"backgroundColor": "#3793ff", "fontSize": "20px", "color": "white"}
+      "bubble": {"backgroundColor": "unset","color": "#3793ff", "fontSize": "20px"}
     },
     "default": {
-      "shared": {"bubble": {"color": "#202A5E"}},
+      "shared": {"bubble": {"color": "#202A5E", "maxWidth":"calc((40vw - 120px)/2.5)"}},
       "ai": {"bubble": {"backgroundColor": "white", "padding-inline":"3vh", "padding-block":"1vh",
-      "border-top-left-radius": "0px",
-      "border-bottom-left-radius": "25px",
-      "border-top-right-radius": "25px",
-      "border-bottom-right-radius": "25px"}},
-      "user": {"bubble": {"backgroundColor": "white",  "padding-inline":"3vh", "padding-block":"1vh",
-      "border-top-left-radius": "25px",
-      "border-bottom-left-radius": "25px",
-      "border-top-right-radius": "0px",
-      "border-bottom-right-radius": "25px"}},
+      "border-top-left-radius": "10px",
+      "border-bottom-left-radius": "10px",
+      "border-top-right-radius": "10px",
+      "border-bottom-right-radius": "10px"}},
+      "user": {"bubble": {"backgroundColor": "#707EE1", "color":"white", "padding-inline":"3vh", "padding-block":"1vh",
+      "border-top-left-radius": "10px",
+      "border-bottom-left-radius": "10px",
+      "border-top-right-radius": "10px",
+      "border-bottom-right-radius": "10px"}},
       "bob": {"bubble": {"backgroundColor": "white"}}
     }
   }'
@@ -107,7 +130,8 @@
                     `).join('')}
                 </div>
             `;
-    } else if (data.message_data) {
+    }
+    else if (data.message_data) {
       const textHtml = data.message_data.messages
         .filter(message => message.type === 'text')
         .map(message => `<div style="padding-bottom: 2px;">${message.message}</div>`)
@@ -130,7 +154,8 @@
 
   async function fetchNodes() {
     const chat_id = 'd290f1ee-6c54-4b01-90e6-d701748f0851'; // Replace with your actual chat_id
-    const response = await fetch(`https://deep-chat-1.onrender.com/nodes/${chat_id}`);
+   // const response = await fetch(`https://deep-chat-1.onrender.com/nodes/${chat_id}`);
+    const response = await fetch(`http://localhost:5000/nodes/${chat_id}`);
     fetchedNodes = await response.json();
     displayNode(currentNodeIndex);
   }
@@ -144,7 +169,7 @@
 
       if (!(node.data.buttons_data && node.data.buttons_data.buttons.length > 0)) {
         // Add a "Next" button if there are no buttons in the node
-        const nextButtonHtml = `<button class="deep-chat-next-button" onclick="handleNextButtonClick()">Next</button>`;
+        const nextButtonHtml = `<div class="deep-chat-next-button" onclick="handleNextButtonClick()">Next</div>`;
         const nextButtonMessage = { html: nextButtonHtml, role: "user" };
         elementRef.history = [...elementRef.history, nextButtonMessage];
       }
