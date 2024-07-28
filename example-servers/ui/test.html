@@ -19,9 +19,8 @@
     .deep-chat-next-button{
         background-color: #707EE1 !important;
     }
-    .deep-chat-button{
+    .deep-chat-button-custom{
         background-color: #707EE1 !important;
-        color: white !important;
     }
 </style>
 <script
@@ -32,13 +31,14 @@
 <div id="chat-container">
   <deep-chat
     id="chat-element"
-    avatars='{
-    "default": {"styles": {"avatar": {"height": "40px", "width": "40px"}, "container": {"marginTop": "8px"}}},
-    "user": {"src": "./assets/user.svg", "styles": {"avatar": {"marginLeft": "-3px"}}},
-    "ai": {"src": "./assets/bot.svg", "styles": {"avatar": {"marginLeft": "-3px"}}},
-    "bob": {"src": "path-to-file.png", "styles": {"avatar": {"borderRadius": "15px"}}}
-  }'
     demo='{"displayLoadingBubble": true}'
+    auxiliaryStyle="
+    ::-webkit-scrollbar {
+      display:none;
+    }
+    ::-webkit-scrollbar-thumb {
+      display:none;
+    }"
     textInput='{
     "disabled": true,
     "styles": {
@@ -48,7 +48,7 @@
     "placeholder": {
       "text": "Under Construction"
   }}'
-    submitButtonStyles='{h
+    submitButtonStyles='{
     "disabled": {
       "container": {"default": {"display":"flex","alignItems":"center", "justifyContent":"center"}},
       "svg": {
@@ -64,8 +64,8 @@
       "bubble": {"backgroundColor": "unset","color": "#3793ff", "fontSize": "20px"}
     },
     "default": {
-      "shared": {"bubble": {"color": "#202A5E", "maxWidth":"calc((40vw - 120px)/2.5)"}},
-      "ai": {"bubble": {"backgroundColor": "white", "padding-inline":"3vh", "padding-block":"1vh",
+      "shared": {"innerContainer": {"margin": "0px", "width":"100%"},"bubble": {"color": "#202A5E", "maxWidth":"50%"}},
+      "ai": {"bubble": {"backgroundColor": "unset", "padding-block":"1vh",
       "border-top-left-radius": "10px",
       "border-bottom-left-radius": "10px",
       "border-top-right-radius": "10px",
@@ -82,6 +82,7 @@
 </div>
 </body>
 <script type="module">
+  let x="white";
   const elementRef = document.getElementById("chat-element");
   const chatContainer = document.getElementById("chat-container");
 
@@ -96,34 +97,27 @@
   });
 
   const generateHTML = (data) => {
-    console.log('Generating HTML for data:', data);
 
     if (data.buttons_data) {
-      const messageHtml = data.buttons_data.messages.length > 0
-        ? data.buttons_data.messages.map((message) => `<p>${message.message}</p>`).join('')
-        : '<p>No messages available</p>';
-
+      x="unset";
       const buttonsHtml = data.buttons_data.buttons && data.buttons_data.buttons.length > 0
-        ? data.buttons_data.buttons.map((button) => `<button class="deep-chat-button" onclick="handleButtonClick('${button.button}')">${button.button}</button>`).join('')
+        ? data.buttons_data.buttons.map((button) => `<button class="deep-chat-button-custom" style="margin-inline:4px; background-color: #707EE1 !important;; padding-inline: 20px;
+    padding-block: 10px; border-radius: 10px; border:0; color:white" onclick="handleButtonClick('${button.button}')">${button.button}</button>`).join('')
         : '<p>No buttons available</p>';
 
       return `
                 <div>
-                    ${messageHtml}
                     ${buttonsHtml}
                 </div>
             `;
     } else if (data.card_data) {
       return `
-                <div style="padding: 2vh">
+                <div>
                     ${data.card_data.cards?.map((card) => `
                         <div>
-                            <h3>${card.title}</h3>
-                            <p>${card.description}</p>
-                            <img src="${card.image}" alt="${card.title}" style="width:90%; border-radius: 10px; margin-bottom: 1vh"/>
-                            <div>
                             ${card.buttons.map((button) => `
-                                <button class="deep-chat-button" onclick="handleButtonClick('${button.name}')">${button.name}</button>
+                                <button class="deep-chat-button-custom"  style="margin-inline:2px; background-color: #707EE1 !important; padding-inline: 20px;
+    padding-block: 10px; border-radius: 10px; border:0; color:white" onclick="handleButtonClick('${button.name}')">${button.name}</button>
                             `).join('')}
                             </div>
                         </div>
@@ -132,30 +126,65 @@
             `;
     }
     else if (data.message_data) {
-      const textHtml = data.message_data.messages
-        .filter(message => message.type === 'text')
-        .map(message => `<div style="padding-bottom: 2px;">${message.message}</div>`)
-        .join('');
-
-      const imageHtml = data.message_data.messages
+     const imageHtml = data.message_data.messages
         .filter(message => message.type === 'image')
-        .map(message => `<img src="${message.message}" alt="Image" style="padding-bottom: 2px;width:90%" />`)
+        .map(message => `<img src="${message.message}" alt="Image" style="padding-bottom: 2px;max-width: 100%; border-radius: 10px" />`)
         .join('');
 
       return `
                 <div>
-                    ${textHtml ? textHtml : '<p>No text available</p>'}
                     ${imageHtml ? imageHtml : '<p>No image available</p>'}
                 </div>
             `;
     }
     return '<p>No data available</p>';
   };
+  const generateText = (data) => {
 
+    if (data.buttons_data) {
+      const messageHtml = data.buttons_data.messages.length > 0
+        ? data.buttons_data.messages.map((message) => `<div style="background-color: white; padding-inline: 20px;
+    padding-block: 10px; border-radius: 10px">${message.message}</div>`).join('')
+        : '<p>No messages available</p>';
+
+      return `
+                <div>
+                    ${messageHtml}
+                </div>
+            `;
+    } else if (data.card_data) {
+      return `
+                <div style="background-color: white; padding-inline: 20px;
+    padding-block: 10px; border-radius: 10px">
+                    ${data.card_data.cards?.map((card) => `
+                        <div>
+                            <h3>${card.title}</h3>
+                            <p>${card.description}</p>
+                            <img src="${card.image}" alt="${card.title}" style="width:90%; border-radius: 10px; margin-bottom: 1vh"/>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+    }
+    else if (data.message_data) {
+      const textHtml = data.message_data.messages
+        .filter(message => message.type === 'text')
+        .map(message => `<div style="background-color: white; padding-inline: 20px;
+    padding-block: 10px; border-radius: 10px">${message.message}</div>`)
+        .join('');
+
+      return `
+                <div>
+                    ${textHtml ? textHtml : '<p>No text available</p>'}
+                </div>
+            `;
+    }
+    return '<p>No data available</p>';
+  };
   async function fetchNodes() {
     const chat_id = 'd290f1ee-6c54-4b01-90e6-d701748f0851'; // Replace with your actual chat_id
    // const response = await fetch(`https://deep-chat-1.onrender.com/nodes/${chat_id}`);
-    const response = await fetch(`http://localhost:5000/nodes/${chat_id}`);
+    const response = await fetch(`https://deep-chat-1.onrender.com/nodes/${chat_id}`);
     fetchedNodes = await response.json();
     displayNode(currentNodeIndex);
   }
@@ -163,9 +192,10 @@
   function displayNode(index) {
     if (index < fetchedNodes.length) {
       const node = fetchedNodes[index];
-      const responseMessage = { html: generateHTML(node.data), role: "ai" };
+      const responseHTML = { html: generateHTML(node.data), role: "ai" };
+      const responseMessage = { html: generateText(node.data), role: "ai" };
 
-      elementRef.history = [...elementRef.history, responseMessage];
+      elementRef.history = [...elementRef.history, responseMessage, responseHTML,];
 
       if (!(node.data.buttons_data && node.data.buttons_data.buttons.length > 0)) {
         // Add a "Next" button if there are no buttons in the node
@@ -195,13 +225,14 @@
   });
 
   elementRef.history = [
-    { role: "ai", text: "Do you want to know more about our product?" }
+    { role: "ai", html: `<div style="background-color: white; padding-inline: 20px;
+    padding-block: 10px; border-radius: 10px">Do you want to know more about our product?` }
   ];
-  elementRef.setAttribute(
-    "introMessage",
-    JSON.stringify({
-      text: "Hi! I am your AI assistant..",
-    })
-  );
+  // elementRef.setAttribute(
+  //   "introMessage",
+  //   JSON.stringify({
+  //     text: "Hi! I am your AI assistant..",
+  //   })
+  // );
 </script>
 </html>
