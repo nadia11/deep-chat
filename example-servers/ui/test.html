@@ -53,37 +53,69 @@
       "container": {"default": {"display":"flex","alignItems":"center", "justifyContent":"center"}},
       "svg": {
         "content": "<?xml version=\"1.0\" encoding=\"utf-8\"?> <svg viewBox=\"0 0 25 25\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" d=\"M5.781 4.414a7 7 0 019.62 10.039l-9.62-10.04zm-1.408 1.42a7 7 0 009.549 9.964L4.373 5.836zM10 1a9 9 0 100 18 9 9 0 000-18z\"/> </svg>",
-        "styles": {"default": {"marginBottom": "1.2vh", "paddingLeft": "2px"}}
+        "styles": {"default": {"display":"none"}}
       }
     }
   }'
     chatStyle='{"background": "rgba(204, 232, 255, 0.6)", "borderRadius": "20px","height": "80vh","width":"40vw","paddingBlock":"30px","paddingInline":"60px"}'
-    messageStyles='{
+<!--    messageStyles='{-->
 
-     "loading": {
-      "bubble": {"backgroundColor": "unset","color": "#3793ff", "fontSize": "20px"}
-    },
-    "default": {
-      "shared": {"innerContainer": {"margin": "0px", "width":"100%"},"bubble": {"color": "#202A5E", "maxWidth":"50%"}},
-      "ai": {"bubble": {"backgroundColor": "unset", "padding-block":"1vh",
-      "border-top-left-radius": "10px",
-      "border-bottom-left-radius": "10px",
-      "border-top-right-radius": "10px",
-      "border-bottom-right-radius": "10px"}},
-      "user": {"bubble": {"backgroundColor": "#707EE1", "color":"white", "padding-inline":"3vh", "padding-block":"1vh",
-      "border-top-left-radius": "10px",
-      "border-bottom-left-radius": "10px",
-      "border-top-right-radius": "10px",
-      "border-bottom-right-radius": "10px"}},
-      "bob": {"bubble": {"backgroundColor": "white"}}
-    }
-  }'
+<!--     "loading": {-->
+<!--      "bubble": {"backgroundColor": "unset","color": "#3793ff", "fontSize": "20px"}-->
+<!--    },-->
+<!--    "default": {-->
+<!--      "shared": {"innerContainer": {"margin": "0px", "width":"100%"},"bubble": {"color": "#202A5E", "maxWidth":"50%"}},-->
+<!--      "ai": {"bubble": {"backgroundColor": "unset", "padding-block":"1vh",-->
+<!--      "border-top-left-radius": "10px",-->
+<!--      "border-bottom-left-radius": "10px",-->
+<!--      "border-top-right-radius": "10px",-->
+<!--      "border-bottom-right-radius": "10px"}},-->
+<!--      "user": {"bubble": {"backgroundColor": "#707EE1", "color":"white", "padding-inline":"3vh", "padding-block":"1vh",-->
+<!--      "border-top-left-radius": "10px",-->
+<!--      "border-bottom-left-radius": "10px",-->
+<!--      "border-top-right-radius": "10px",-->
+<!--      "border-bottom-right-radius": "10px"}},-->
+<!--      "bob": {"bubble": {"backgroundColor": "white"}}-->
+<!--    }-->
+<!--  }'-->
   ></deep-chat>
 </div>
 </body>
 <script type="module">
-  let x="white";
+  function getMaxWidth() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 1024) {
+      return "90%"; // Mobile size
+    }
+     else {
+      return "50%"; // Desktop size
+    }
+  }
+  const messageStyles = {
+
+
+    "loading": {
+    "bubble": {"backgroundColor": "unset","color": "#3793ff", "fontSize": "20px"}
+  },
+    "default": {
+    "shared": {"innerContainer": {"margin": "0px", "width":"100%"},"bubble": {"color": "#202A5E", "maxWidth":getMaxWidth()}},
+    "ai": {"bubble": {"backgroundColor": "unset", "padding-block":"1vh",
+      "border-top-left-radius": "10px",
+      "border-bottom-left-radius": "10px",
+      "border-top-right-radius": "10px",
+      "border-bottom-right-radius": "10px"}},
+    "user": {"bubble": {"backgroundColor": "#707EE1", "color":"white", "padding-inline":"3vh", "padding-block":"1vh",
+      "border-top-left-radius": "10px",
+      "border-bottom-left-radius": "10px",
+      "border-top-right-radius": "10px",
+      "border-bottom-right-radius": "10px"}},
+    "bob": {"bubble": {"backgroundColor": "white"}}
+  }
+  };
+
+
   const elementRef = document.getElementById("chat-element");
+  elementRef.messageStyles = messageStyles;
   const chatContainer = document.getElementById("chat-container");
 
   let currentNodeIndex = 0;
@@ -99,7 +131,6 @@
   const generateHTML = (data) => {
 
     if (data.buttons_data) {
-      x="unset";
       const buttonsHtml = data.buttons_data.buttons && data.buttons_data.buttons.length > 0
         ? data.buttons_data.buttons.map((button) => `<button class="deep-chat-button-custom" style="margin-inline:4px; background-color: #707EE1 !important;; padding-inline: 20px;
     padding-block: 10px; border-radius: 10px; border:0; color:white" onclick="handleButtonClick('${button.button}')">${button.button}</button>`).join('')
