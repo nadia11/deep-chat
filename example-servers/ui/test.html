@@ -58,26 +58,6 @@
     }
   }'
     chatStyle='{"background": "rgba(204, 232, 255, 0.6)", "borderRadius": "20px","height": "80vh","width":"40vw","paddingBlock":"30px","paddingInline":"60px"}'
-<!--    messageStyles='{-->
-
-<!--     "loading": {-->
-<!--      "bubble": {"backgroundColor": "unset","color": "#3793ff", "fontSize": "20px"}-->
-<!--    },-->
-<!--    "default": {-->
-<!--      "shared": {"innerContainer": {"margin": "0px", "width":"100%"},"bubble": {"color": "#202A5E", "maxWidth":"50%"}},-->
-<!--      "ai": {"bubble": {"backgroundColor": "unset", "padding-block":"1vh",-->
-<!--      "border-top-left-radius": "10px",-->
-<!--      "border-bottom-left-radius": "10px",-->
-<!--      "border-top-right-radius": "10px",-->
-<!--      "border-bottom-right-radius": "10px"}},-->
-<!--      "user": {"bubble": {"backgroundColor": "#707EE1", "color":"white", "padding-inline":"3vh", "padding-block":"1vh",-->
-<!--      "border-top-left-radius": "10px",-->
-<!--      "border-bottom-left-radius": "10px",-->
-<!--      "border-top-right-radius": "10px",-->
-<!--      "border-bottom-right-radius": "10px"}},-->
-<!--      "bob": {"bubble": {"backgroundColor": "white"}}-->
-<!--    }-->
-<!--  }'-->
   ></deep-chat>
 </div>
 </body>
@@ -99,7 +79,7 @@
   },
     "default": {
     "shared": {"innerContainer": {"margin": "0px", "width":"100%"},"bubble": {"color": "#202A5E", "maxWidth":getMaxWidth()}},
-    "ai": {"bubble": {"backgroundColor": "unset", "padding-block":"1vh",
+    "ai": {"bubble": {"backgroundColor": "unset",
       "border-top-left-radius": "10px",
       "border-bottom-left-radius": "10px",
       "border-top-right-radius": "10px",
@@ -132,7 +112,7 @@
 
     if (data.buttons_data) {
       const buttonsHtml = data.buttons_data.buttons && data.buttons_data.buttons.length > 0
-        ? data.buttons_data.buttons.map((button) => `<button class="deep-chat-button-custom" style="margin-inline:4px; background-color: #707EE1 !important;; padding-inline: 20px;
+        ? data.buttons_data.buttons.map((button) => `<button class="deep-chat-button-custom" style="margin-inline:4px; background-color: #707EE1 !important; padding-inline: 20px;
     padding-block: 10px; border-radius: 10px; border:0; color:white" onclick="handleButtonClick('${button.button}')">${button.button}</button>`).join('')
         : '<p>No buttons available</p>';
 
