@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1f461ad8-17e1-47c4-a082-8bd1941cbfe2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example-servers/node/express/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/example-servers/node/express/src/app.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/example-servers/ui/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/example-servers/ui/test.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -37,7 +38,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "DefaultHtmlFileTemplate": "HTML File",
-    "JavaScript Debug.test.html.executor": "Run",
+    "JavaScript Debug.test.html.executor": "Debug",
     "JavaScript Debug.test2.html.executor": "Run",
     "Node.js.test.js.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -87,6 +88,7 @@
       <workItem from="1721368733307" duration="2544000" />
       <workItem from="1721806151259" duration="2634000" />
       <workItem from="1721820502657" duration="15485000" />
+      <workItem from="1722228380508" duration="11180000" />
     </task>
     <servers />
   </component>
